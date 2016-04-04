@@ -1,0 +1,3 @@
+[submodule "rapid-lib"]
+	path = rapid-lib
+	url = https://github.com/mnieper/rapid-lib.git
