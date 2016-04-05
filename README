@@ -1,5 +1,13 @@
 This repository contains an implementation of Oleg Kiselyov's CK-macros.
 
+Cloning
+-------
+
+This repository includes submodules. If you use the following clone command,
+it will automatically initialize and update each submodule in the repository.
+
+  $ git clone --recursive https://github.com/mnieper/rapid-macros.git
+
 Run Tests
 ---------
 
