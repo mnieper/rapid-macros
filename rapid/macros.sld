@@ -33,6 +33,7 @@
 	  m-list
 	  m-eq?
 	  m-eqv?
+	  m-symbol?
 	  m-gensym
 	  m-error)
   (import (scheme base))

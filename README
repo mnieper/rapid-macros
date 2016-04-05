@@ -1,1 +1,48 @@
+This repository contains an implementation of Oleg Kiselyov's CK-macros.
 
+Run Tests
+---------
+
+Assuming you have Chibi Scheme installed, you can run the tests by issuing
+the command
+
+  chibi-scheme -Irapid-lib tests.scm
+
+in the main directory. The test suite should work as well with any other
+R7RS-compliant implementation of the Scheme programming language although
+the exact command-line syntax may differ.
+
+Example
+-------
+
+  $ chibi-scheme -mscheme.base -mrapid.macros -msrfi.2
+  > (define-macro simple-match ()
+      ((simple-match expr (pattern template) ...)
+       (m-expression
+         `(call-with-current-continuation
+           (lambda (return)
+             (let ((e expr))
+	       (or (and-let* ,(%compile-pattern 'pattern 'e) (return template))
+                   ...
+	           (error "does not match" expr))))))))
+  > (define-macro %compile-pattern ()
+      ((%compile-pattern '() 'e)
+       '(((null? e))))
+      ((%compile-pattern '(pattern1 pattern2 ...) 'e)
+       `(((not (null? e)))
+         (e1 (car e))
+         (e2 (cdr e))
+         ,@(%compile-pattern 'pattern1 'e1)
+         ,@(%compile-pattern '(pattern2 ...) 'e2)))
+      ((%compile-pattern 'x 'e)
+       (m-if (m-symbol? 'x)
+             '((x e))
+  	     '(((equal? x e))))))
+  > (define (f e)
+      (simple-match e
+  	            (10 'ten)
+	            ((11 x) x)))
+  > (f 10)
+  ten
+  > (f '(11 eleven))
+  eleven

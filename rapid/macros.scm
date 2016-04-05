@@ -36,7 +36,9 @@
     ((ck s (quasiquote ea))
      (m-quasiquote-aux :prepare s ea '()))
     ((ck s (op ea ...))
-     (op :prepare s ea ... ))))
+     (op :prepare s ea ... ))
+    ((ck s v)
+     (syntax-error "quotation missing" v))))
 
 (define-syntax define-macro
   (syntax-rules ()
@@ -167,6 +169,7 @@
 (define-macro m-list ()
   ((m-list 'a ...) '(a ...)))
 
+;; Returns true if the two identifiers are syntactically equal
 (define-macro m-eq? ()
   ((m-eq? 'id 'v)
    (m-shift
@@ -187,6 +190,7 @@
 	   (test ok)))))
     (m))))
 
+;; Returns true if the two identifiers have the same meaning
 (define-macro m-eqv? ()
   ((m-eqv? 'id1 'id2)
    (m-shift
@@ -201,6 +205,18 @@
 	       ((test x) (k '#f))))
 	   (test id2)))))
     (m))))
+
+(define-macro m-symbol? ()
+  ((m-symbol? '(x . y)) '#f)
+  ((m-symbol? '#(x ...)) '#f)
+  ((m-symbol? 'x)
+   (m-shift
+    k
+    (define-syntax test
+      (syntax-rules ()
+        ((test x) (k '#t))
+        ((test y) (k '#f))))
+    (test symbol))))
 
 (define-macro m-null? ()
   ((m-null? '()) '#t)

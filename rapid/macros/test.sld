@@ -140,6 +140,25 @@
       
       (test-end "m-let")
 
+      (test-begin "m-symbol?")
+
+      (test-equal "Identifiers are symbols"
+		  #t
+		  (m-expression
+		   (m-if (m-symbol? 'a) '#t '#f)))
+
+      (test-equal "Numbers aren't symbols"
+		  #f
+		  (m-expression
+		   (m-if (m-symbol? '34) '#t '#f)))
+
+      (test-equal "The empty list is no symbol"
+		  #f
+		  (m-expression
+		   (m-if (m-symbol? '()) '#t '#f)))
+
+      (test-end "m-symbol?")
+      
       ;; TODO: m-eq?, m-eqv?, m-gensym
       
       ;; TODO: m-error
